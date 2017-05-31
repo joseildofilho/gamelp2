@@ -1,4 +1,4 @@
-package com.game.server;
+package server;
 
 /**
  * Created by root on 05/05/17.

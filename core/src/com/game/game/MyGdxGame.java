@@ -6,9 +6,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.game.bullet.Bullets;
 import com.game.Connection.Connection;
 import com.game.EnemyManager;
+import com.game.bullet.Bullets;
 
 import java.io.IOException;
 
@@ -25,13 +25,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         Gdx.input.setInputProcessor(this);
 
-        try {
-            connect = new Connection("player");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         this.enemyManager = new EnemyManager();
 
@@ -48,6 +41,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         Bullets.setBatch(batch);
         Bullets.addShip(ship,enemyShip);
 
+        try {
+            connect = new Connection("player");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -56,8 +56,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         this.batch.begin();
-
-        Bullets.update();
+        //todo precisa ser ajeitado pois aqui é o render e não algo de verificar final de jogo
+        if(Bullets.update()) {
+            //todo adicionar um placar
+            connect.sayVictory();
+            System.out.println("Voce perdeu");
+        }
 
         connect.sendDataShip(ship);
         connect.updateShip(enemyShip);
@@ -125,4 +129,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
+
+
+
 }

@@ -13,7 +13,7 @@ import com.game.game.Ship;
 * */
 public class Bullet extends Sprite implements Updatable {
 
-    private float x, y;
+    private float x, y, velocity;
     private static Texture bullet = new Texture("0.png");
     private Ship ship;
     private boolean ally;
@@ -32,12 +32,14 @@ public class Bullet extends Sprite implements Updatable {
             this.x -= bullet.getWidth() / 2;
             this.y = y - ship.getHeight() - bullet.getHeight();
         }
+        velocity = 5;
     }
 
     @Override
     public void update() {
         if (ally) {
-            this.setPosition(x, y++);
+            y += velocity;
+            this.setPosition(x, y);
             if (y > 700) {
                 try {
                     this.finalize();
@@ -47,7 +49,8 @@ public class Bullet extends Sprite implements Updatable {
             }
         }
         else {
-            this.setPosition(x, y--);
+            y-= velocity;
+            this.setPosition(x, y);
             if (y - bullet.getHeight() < 0) {
                 try {
                     this.finalize();
@@ -60,7 +63,11 @@ public class Bullet extends Sprite implements Updatable {
 
     public boolean checkCollision() {
         if (this.getBoundingRectangle().overlaps(ship.getBoundingRectangle())) {
-            System.out.println("eu nave " + ship.getId() + " fui baleada pela outra");
+            try {
+                this.finalize();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             return true;
         }
         return false;
@@ -70,5 +77,9 @@ public class Bullet extends Sprite implements Updatable {
     protected void finalize() throws Throwable {
         super.finalize();
         Bullets.removeBullet(this);
+    }
+
+    public boolean getType() {
+        return ally;
     }
 }

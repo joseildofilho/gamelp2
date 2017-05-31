@@ -36,12 +36,13 @@ public class Bullets {
     }
 
 
-    public static void update() {
+    public static boolean update() {
         for (Bullet s : bullets) {
             s.update();
-            if (s.checkCollision()) System.out.println("e morreu");
+            if (s.checkCollision() && !s.getType()) return true;
             s.draw(spriteBatch);
         }
+        return false;
     }
 
     public static void addShip(Ship ally, Ship enemy) {
@@ -51,6 +52,5 @@ public class Bullets {
 
     protected static void removeBullet(Bullet bullet) {
         Bullets.bullets.remove(bullet);
-        System.out.println("numero de balas sendo processadas na corte:"+bullets.size());
     }
 }
